@@ -1,45 +1,37 @@
-import ForgeUI, {
-  CustomField,
-  CustomFieldEdit,
-  render,
-  Text,
-  TextField,
-  useProductContext,
-} from "@forge/ui";
+const { CustomField, render } = require("@forge/bridge");
 
-const View = () => {
-  const {
-    extensionContext: { fieldValue },
-  } = useProductContext();
+async function createCustomField() {
+  const iframeUrl = "https://your-iframe-url.com";
 
-  return (
-    <CustomField>
-      <Text content={`Hello ${fieldValue || "world"}!`} />
-    </CustomField>
-  );
-};
+  const iframeContent = `<iframe src="${iframeUrl}" width="100%" height="400"></iframe>`;
 
-const App = () => {
-  const {
-    extensionContext: { fieldValue },
-  } = useProductContext();
+  const customField = await CustomField.create({
+    name: "Embedded IFrame",
+    schema: {
+      type: "string",
+      custom: "com.example.embedded-iframe",
+    },
+    view: {
+      type: "web_resource",
+      format: "iframe",
+      items: {
+        iframe: iframeContent,
+      },
+    },
+  });
 
-  const fieldAppearance = (value) => {
-    switch (value) {
-      case "medium":
-        return "success";
-      case "high":
-        return "removed";
-      default:
-        return "default";
-    }
-  };
+  return customField;
+}
+
+exports.run = async (context) => {
+  const customField = await createCustomField();
+
+  console.log(`Custom field created with ID: ${customField.id}`);
 
   return (
-    <CustomField>
-      <Text>"hello"</Text>
-    </CustomField>
+    <div>
+      <h1>Custom Field Created</h1>
+      <p>ID: {customField.id}</p>
+    </div>
   );
 };
-
-export const run = render(<App />);
