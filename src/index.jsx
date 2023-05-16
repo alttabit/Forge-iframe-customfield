@@ -1,38 +1,20 @@
-const { CustomField, render } = require("@forge/bridge");
+const { macro, render, CustomField } = require("@forge/bridge");
 
-const bookingPageUrl =
-  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0YlvobJROz7x8c6lLCAakiL4c1Y6YKQU9JV-Qdmu1OMX6PVV-RhZ-QHnyZZipLEKT35QroPuV_?gv=true";
+macro(async (context, params) => {
+  const issueKey = context.platformContext.issueKey;
+  const customField = await CustomField.get(issueKey, "custom_field_id");
 
-async function createCustomField() {
-  const iframeContent = `<iframe src="${bookingPageUrl}" width="100%" height="400"></iframe>`;
+  if (!customField) {
+    return "Custom field not found.";
+  }
 
-  const customField = await CustomField.create({
-    name: "Google Calendar Booking Page",
-    schema: {
-      type: "string",
-      custom: "com.example.google-calendar",
-    },
-    view: {
-      type: "web_resource",
-      format: "iframe",
-      items: {
-        iframe: iframeContent,
-      },
-    },
-  });
+  const bookingPageUrl = customField.value;
 
-  return customField;
-}
+  if (!bookingPageUrl) {
+    return "Booking page URL not found.";
+  }
 
-exports.run = async (context) => {
-  const customField = await createCustomField();
-
-  console.log(`Custom field created with ID: ${customField.id}`);
-
-  return (
-    <div>
-      <h1>Custom Field Created</h1>
-      <p>ID: {customField.id}</p>
-    </div>
-  );
-};
+  return `
+    <a href="${bookingPageUrl}" target="_blank">Open Booking Page</a>
+  `;
+});
