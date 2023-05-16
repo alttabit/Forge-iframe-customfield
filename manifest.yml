@@ -1,0 +1,20 @@
+modules:
+  jira:customField:
+    - key: book5-hello-world
+      name: book5
+      description: A hello world custom field.
+      type: string
+      validation:
+        expression: value == null || !!value.match("^[A-Za-z]+$")
+        errorMessage: The value must consist only of letters
+      readOnly: false
+      function: main
+      edit:
+        function: edit
+  function:
+    - key: main
+      handler: index.runView
+    - key: edit
+      handler: index.runEdit
+app:
+  id: ari:cloud:ecosystem::app/db49bbcc-8002-4f9e-a509-a78a3a8908c4
