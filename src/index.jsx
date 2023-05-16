@@ -1,15 +1,16 @@
 const { CustomField, render } = require("@forge/bridge");
 
-async function createCustomField() {
-  const iframeUrl = "https://your-iframe-url.com";
+const bookingPageUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0YlvobJROz7x8c6lLCAakiL4c1Y6YKQU9JV-Qdmu1OMX6PVV-RhZ-QHnyZZipLEKT35QroPuV_?gv=true";
 
-  const iframeContent = `<iframe src="${iframeUrl}" width="100%" height="400"></iframe>`;
+async function createCustomField() {
+  const iframeContent = `<iframe src="${bookingPageUrl}" width="100%" height="400"></iframe>`;
 
   const customField = await CustomField.create({
-    name: "Embedded IFrame",
+    name: "Google Calendar Booking Page",
     schema: {
       type: "string",
-      custom: "com.example.embedded-iframe",
+      custom: "com.example.google-calendar",
     },
     view: {
       type: "web_resource",

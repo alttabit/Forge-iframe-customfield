@@ -16,5 +16,9 @@ modules:
       handler: index.runView
     - key: edit
       handler: index.runEdit
+  permissions:
+    scopes:
+      - write:customField
+      - manage:jira-configuration
 app:
   id: ari:cloud:ecosystem::app/db49bbcc-8002-4f9e-a509-a78a3a8908c4
